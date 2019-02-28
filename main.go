@@ -10,24 +10,25 @@ import (
 	"strconv"
 
 	"github.com/prometheus/client_golang/prometheus"
-
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-func index(w http.ResponseWriter, r *http.Request) {
-	if rand.Int63n(100) < errRate {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	// fmt.Printf("Handling %+v\n", r)
-	bs, err := ioutil.ReadFile("./content/index.html")
+func page(path string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if rand.Int63n(100) < errRate {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		// fmt.Printf("Handling %+v\n", r)
+		bs, err := ioutil.ReadFile(path)
 
-	if err != nil {
-		fmt.Printf("Couldn't read index.html: %v", err)
-		os.Exit(1)
-	}
+		if err != nil {
+			fmt.Printf("Couldn't read index.html: %v", err)
+			os.Exit(1)
+		}
 
-	io.WriteString(w, string(bs[:]))
+		io.WriteString(w, string(bs[:]))
+	}
 }
 
 func healthz(w http.ResponseWriter, r *http.Request) {
@@ -47,7 +48,8 @@ func main() {
 			fmt.Println(err)
 		}
 	}
-	http.HandleFunc("/", prometheus.InstrumentHandlerFunc("index", index))
+	http.HandleFunc("/", page("./content/main.html"))
+	http.HandleFunc("/page", prometheus.InstrumentHandlerFunc("index", page("./content/index.html")))
 	http.HandleFunc("/healthz", prometheus.InstrumentHandlerFunc("healthz", healthz))
 	http.Handle("/metrics", promhttp.Handler())
 	port := ":8000"
