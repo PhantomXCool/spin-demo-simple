@@ -10,11 +10,13 @@ ADD . /go/src/spinnaker.io/demo/k8s-demo
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go install  -a -installsuffix cgo -ldflags="-w -s" spinnaker.io/demo/k8s-demo
 ADD ./content /go/bin/content/
 
-FROM scratch
+FROM alpine:3.9
+
+RUN apk add --no-cache curl
 
 COPY --from=builder /go/bin/k8s-demo /go/bin/k8s-demo
 COPY --from=builder /go/bin/content/ /go/bin/content/
 
 WORKDIR /go/bin/
 EXPOSE 8000
-ENTRYPOINT ["/go/bin/k8s-demo"]
+CMD ["/go/bin/k8s-demo"]
