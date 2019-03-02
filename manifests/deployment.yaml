@@ -4,7 +4,6 @@ metadata:
   name: spinnaker-demo
   labels:
     source: demo
-    stack: frontend
     app: spinnaker
   annotations:
     prometheus.io/scrape: "true"
@@ -16,7 +15,6 @@ spec:
     matchLabels:
       source: demo
       app: spinnaker
-      version: main
   template:
     metadata:
       labels:
