@@ -1,0 +1,18 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: spinnaker-demo
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "80"
+    prometheus.io/path:  "/metrics"
+spec:
+  selector:
+    source: demo
+    app: spinnaker
+  #  type: NodePort
+  ports:
+  - protocol: TCP
+    name: http
+    port: 80
+    targetPort: 8000

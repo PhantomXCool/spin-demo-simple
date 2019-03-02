@@ -1,48 +1,39 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: spinnaker-demo
-  namespace: default
+  name: spinnaker-demo-canary
   labels:
     source: demo
     stack: frontend
     app: spinnaker
+    version: canary
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "80"
+    prometheus.io/path:  "/metrics"
 spec:
   replicas: 3
   selector:
     matchLabels:
       source: demo
       app: spinnaker
+      version: canary
   template:
     metadata:
       labels:
         source: demo
         app: spinnaker
+        version: canary
     spec:
       containers:
       - name: primary
-        image: phantomx/spin-demo-sample
+        image: phantomx/spin-demo-sample:v0.0.4-manual
         ports:
         - containerPort: 8000
+          name: http
         readinessProbe:
-          httpGet:
-            path: /
-            port: 8000
-
----
-
-kind: Service
-apiVersion: v1
-metadata:
-  name: spinnaker-demo
-  namespace: default
-spec:
-  selector:
-    source: demo
-    app: spinnaker
-  type: NodePort
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 8000
-    nodePort: 32180
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - curl localhost:8000/healthz

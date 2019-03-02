@@ -1,0 +1,38 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: spinnaker-demo
+  labels:
+    source: demo
+    stack: frontend
+    app: spinnaker
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "80"
+    prometheus.io/path:  "/metrics"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      source: demo
+      app: spinnaker
+      version: main
+  template:
+    metadata:
+      labels:
+        source: demo
+        app: spinnaker
+    spec:
+      containers:
+      - name: primary
+        image: phantomx/spin-demo-sample
+        ports:
+        - containerPort: 8000
+          name: http
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - curl localhost:8000/healthz
+
