@@ -12,7 +12,7 @@ metadata:
     prometheus.io/port: "80"
     prometheus.io/path:  "/metrics"
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       source: demo
