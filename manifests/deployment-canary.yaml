@@ -1,10 +1,10 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: spinnaker-demo-canary
+  name: app-demo-canary
+  namespace: ${namespace}
   labels:
     source: demo
-    stack: frontend
     app: spinnaker
     version: canary
   annotations:
