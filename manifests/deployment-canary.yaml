@@ -2,7 +2,7 @@ apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: app-demo-canary
-  namespace: ${namespace}
+  namespace: ${parameters.namespace}
   labels:
     source: demo
     app: spinnaker

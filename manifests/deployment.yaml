@@ -2,10 +2,11 @@ apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: app-demo
-  namespace: ${namespace}
+  namespace: ${parameters.namespace}
   labels:
     source: demo
     app: spinnaker
+    version: main
   annotations:
     prometheus.io/scrape: "true"
     prometheus.io/port: "80"
@@ -16,11 +17,13 @@ spec:
     matchLabels:
       source: demo
       app: spinnaker
+      version: main
   template:
     metadata:
       labels:
         source: demo
         app: spinnaker
+        version: main
     spec:
       containers:
       - name: primary
