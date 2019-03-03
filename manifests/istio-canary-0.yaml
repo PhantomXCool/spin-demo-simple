@@ -2,8 +2,8 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
+  name: app-demo-virtual-service
   namespace: ${parameters.namespace}
-  name: spinnaker-demo-virtual-service
 spec:
   hosts:
   - "*"
@@ -12,5 +12,15 @@ spec:
   http:
   - route:
     - destination:
-        host: spinnaker-demo.stg.svc.cluster.local
-        subset: v1
+        host: app-demo
+        subset: main
+      weight: 100
+    - destination:
+        host: app-demo
+        subset: canary
+      weight: 0
+    match:
+    - uri:
+        exact: /page
+    - uri:
+        exact: /
