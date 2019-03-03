@@ -37,3 +37,4 @@ spec:
             - /bin/sh
             - -c
             - curl localhost:8000/healthz
+
