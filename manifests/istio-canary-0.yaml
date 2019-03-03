@@ -2,7 +2,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  namespace: stg
+  namespace: ${parameters.namespace}
   name: spinnaker-demo-virtual-service
 spec:
   hosts:
